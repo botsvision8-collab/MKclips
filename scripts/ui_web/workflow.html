@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKClips · Workflow</title>
+<link rel="stylesheet" href="/app/static/css/app.css">
+<link rel="stylesheet" href="/app/static/css/workflow.css">
+<link rel="stylesheet" href="/app/static/app.css?v=ui-fit-20261027-egg-dimensions">
+</head>
+<body class="p-workflow">
+<div class="app">
+  <div class="bl b1"></div><div class="bl b2"></div>
+  <aside class="side glass">
+    <div class="logo"><svg width="170" height="64" viewBox="0 0 170 64" role="img" aria-label="MKClips"><defs><pattern id="h" width="10" height="5" patternUnits="userSpaceOnUse"><rect x="2" width="6" height="5" rx="1" fill="#111"/></pattern></defs><rect x="8" y="52" width="120" height="4" fill="#7d857d"/><rect x="8" y="16" width="120" height="36" fill="#f4f6f4"/><rect x="12" y="20" width="112" height="5" fill="url(#h)"/><rect x="12" y="43" width="112" height="5" fill="url(#h)"/><text x="68" y="40" text-anchor="middle" font-family="Montserrat" font-weight="800" font-size="19" fill="#111">MK</text><polygon points="128,16 158,6 148,30 158,54 128,52" fill="#8d958d"/><polygon points="128,16 158,6 148,30 128,30" fill="#a9b1a9"/></svg></div>
+    <a class="nav on" href="/app"><svg viewBox="0 0 24 24"><path d="M4 12h5l3-7 4 14 3-7h1"/></svg>Workflow</a>
+    <a class="nav" href="/app/validar"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Validar clips</a>
+    <a class="nav" href="/app/editar"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/></svg>Editar</a>
+    <a class="nav" href="/app/configuracion"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>Configuración</a>
+    <div class="sp"></div><select class="mode" id="theme" aria-label="Modo"><option value="oscuro">Modo oscuro</option><option value="claro">Modo claro</option></select>
+  </aside>
+  <main class="main workflow">
+    <div class="hd"><h1>Work<b>flow</b></h1></div>
+    <div class="col">
+      <section class="card glass">
+        <div class="ch"><span class="num">1</span><span class="ct">Descargar video</span></div>
+        <div class="row"><span class="lab">URL</span><input id="url" class="in" placeholder="Pega el enlace del stream" aria-label="URL"></div>
+        <div class="row"><span class="lab">Destino</span><input id="dest" class="in" aria-label="Destino"><button class="bt gh" data-pick="carpeta" data-target="dest">Examinar</button></div>
+        <div class="pad"><button class="bt" id="download">DESCARGAR</button></div>
+      </section>
+      <section class="card glass">
+        <div class="ch"><span class="num">2</span><span class="ct">Procesar streams</span></div>
+        <div class="row"><button class="bt ol sm" data-pick="archivo" data-target="streams">Agregar streams</button><button class="bt gh sm" data-pick="carpeta" data-target="folder">Agregar carpeta</button></div>
+        <input id="streams" type="file" hidden><input id="folder" type="file" hidden>
+        <div class="row" style="align-items:stretch"><textarea class="ta" id="context" placeholder="Contexto de la tanda (opcional)" aria-label="Contexto"></textarea><div style="display:flex;flex-direction:column;gap:8px;width:200px"><button class="bt gh sm" id="apply-context">Aplicar a toda la cola</button><button class="bt gh sm" id="edit-context">Editar el seleccionado…</button></div></div>
+        <div class="tbl"><div class="tr h"><div>Stream</div><div>Contexto</div><div>Estado</div></div><div id="queue"></div></div>
+        <div class="row"><button class="bt" data-queue="start">Iniciar cola</button><button class="bt gh" data-queue="pause">Pausar</button><button class="bt gh" data-queue="resume">Reanudar</button><button class="bt gh" data-queue="cancel">Cancelar</button><button class="bt gh" data-queue="clear">Limpiar terminados</button></div>
+        <div id="msg" class="notice"></div>
+      </section>
+    </div>
+    <section class="card glass history-card" style="display:flex;flex-direction:column">
+      <div class="ch"><span class="num">3</span><span class="ct">Historial / Resultados</span></div>
+      <div class="row"><button class="bt gh sm" style="flex:1" id="refresh-history">Refrescar</button><button class="bt gh sm" style="flex:1" id="open-results">Abrir carpeta</button></div>
+      <div class="donut"><div><span id="clip-total">0<small>clips</small></span></div></div><div class="lg" id="history"></div><div class="ok" id="history-status"></div>
+    </section>
+  </main>
+</div>
+<script src="/app/static/app.js?v=ui-fit-20261027-egg-dimensions"></script>
+</body>
+</html>

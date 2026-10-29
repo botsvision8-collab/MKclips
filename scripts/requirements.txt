@@ -1,0 +1,19 @@
+# MKClips - dependencias de Python (pip install -r requirements.txt)
+# GPU: ademas de esto, para Whisper por GPU (NVIDIA/CUDA) hace falta:
+#   pip install nvidia-cublas-cu12 nvidia-cudnn-cu12
+
+faster-whisper
+ollama
+truststore
+opencv-python<5  # el editor necesita el detector de caras de OpenCV 4 (OpenCV 5 lo retiró)
+numpy
+scipy
+librosa  # solo para herramientas_busqueda; el detector principal usa NumPy
+flask
+pywebview; sys_platform != "linux"
+pywebview[gtk]; sys_platform == "linux"
+obsws-python
+pystray
+Pillow
+yt-dlp
+curl_cffi

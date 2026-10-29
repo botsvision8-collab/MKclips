@@ -1,0 +1,32 @@
+# Archivos de configuracion internos (nunca subir)
+.claude.json
+ultimo_video.txt
+
+# Datos generados por cada corrida (cambian siempre, no son "codigo")
+transcripcion.json
+candidatos_todos.json
+candidatos_cortos.json
+clips_sugeridos.json
+eventos_audio.json
+historial_clips.json
+resultados_reales.json
+resumen_plan.json
+resultados_busqueda_sonido.json
+resultados_busqueda_imagen.json
+
+# Archivos de audio/video temporales de prueba
+*.wav
+*.mp4
+*.mkv
+*.mov
+*.srt
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Modelos descargados localmente (pesan varios GB, nunca subir)
+*.bin
+*.pt
+*.ckpt

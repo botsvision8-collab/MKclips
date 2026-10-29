@@ -1,0 +1,57 @@
+/* ajuste_pantalla.css — REEMPLAZA a parche_scroll.css. Cargar el ÚLTIMO en todas las pantallas
+   (Workflow, Validar clips, Editar, Configuración).
+   Idea: la PÁGINA se desplaza (scroll normal del documento). No depende del nombre de los
+   contenedores internos, así que funciona aunque cada pantalla tenga su propio HTML. */
+
+/* 1) Desplazamiento de página */
+html{height:auto!important;overflow-x:hidden!important;overflow-y:auto!important}
+body{height:auto!important;min-height:100%;overflow:visible!important;margin:0}
+.app{height:auto!important;min-height:100vh!important;overflow:visible!important;align-items:flex-start!important}
+.app .main{height:auto!important;min-height:100vh;overflow:visible!important}
+/* barra lateral fija mientras se baja */
+.app .side{position:sticky!important;top:0;height:100vh!important;align-self:flex-start!important;flex:0 0 auto}
+/* manchas de fondo fijas a la ventana (no se cortan al desplazar) */
+.app .bl{position:fixed!important}
+sc-if,sc-else{display:contents}
+
+/* 2) Barra de desplazamiento a juego con el diseño */
+html{scrollbar-width:thin;scrollbar-color:rgba(74,222,128,.4) #0b0e0f}
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-track{background:#0b0e0f}
+::-webkit-scrollbar-thumb{background:rgba(74,222,128,.32);border-radius:8px;border:3px solid #0b0e0f}
+::-webkit-scrollbar-thumb:hover{background:rgba(74,222,128,.55)}
+
+/* 3) Configuración: barra inferior siempre visible, con aire alrededor */
+.p-config .main{padding-bottom:0!important}
+.p-config .body,.p-config .lay{overflow:visible!important;flex:none!important;padding-bottom:24px}
+.p-config .body>*{flex:1 1 100%;min-width:0}
+.p-config .foot{position:sticky!important;bottom:20px;margin:6px 0 20px;z-index:5;
+  background:rgba(14,18,19,.92)!important;box-shadow:0 -10px 30px rgba(0,0,0,.45),0 14px 34px rgba(0,0,0,.35)}
+.p-config .lay{align-items:start}
+.p-config .sub{position:sticky;top:20px;max-height:calc(100vh - 150px);overflow:auto}
+
+/* 4) Botones: respuesta visible al pasar y al presionar */
+button,.bt,.nav,.seg button,.seg2 button,.sub button,.sw{transition:filter .12s,transform .08s,background-color .15s,box-shadow .15s,opacity .15s}
+button:not(:disabled),.bt{cursor:pointer}
+/* primarios (degradado) */
+.bt:not(.gh):not(.ol):hover{filter:brightness(1.1) saturate(1.05);box-shadow:0 6px 20px rgba(74,222,128,.28)}
+.bt:not(.gh):not(.ol):active,.bt.pulsado:not(.gh):not(.ol){filter:brightness(.72) saturate(1.1);transform:translateY(1px) scale(.97);box-shadow:none}
+/* secundarios (fantasma) */
+.bt.gh:hover,.bt.ol:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.3)}
+.bt.gh:active,.bt.ol:active,.bt.gh.pulsado,.bt.ol.pulsado{background:rgba(74,222,128,.2);border-color:rgba(74,222,128,.7);color:#bbf7d0;transform:translateY(1px) scale(.97)}
+/* navegación y segmentados */
+.nav:not(.on):hover{background:rgba(255,255,255,.07);color:#f1f5f2}
+.nav:active{transform:scale(.98);background:rgba(74,222,128,.16)}
+.seg button:not(.on):hover,.seg2 button:not(.on):hover,.sub button:not(.on):hover{background:rgba(255,255,255,.07);color:#f1f5f2}
+.seg button:active,.seg2 button:active,.sub button:active{transform:scale(.97)}
+/* foco de teclado */
+button:focus-visible,.bt:focus-visible,.nav:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #4ade80;outline-offset:2px}
+.in:focus,.ta:focus,select:focus{border-color:rgba(74,222,128,.6)!important;box-shadow:0 0 0 3px rgba(74,222,128,.14)}
+/* ocupado: Refrescar / Actualizar / Guardar mientras trabajan */
+.bt.is-busy,button.is-busy{opacity:.62;cursor:progress;pointer-events:none;position:relative}
+.bt.is-busy::after,button.is-busy::after{content:"";display:inline-block;width:12px;height:12px;margin-left:10px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;vertical-align:-2px;animation:mk-gira .7s linear infinite}
+@keyframes mk-gira{to{transform:rotate(360deg)}}
+button:disabled,.bt:disabled{opacity:.45;cursor:not-allowed;filter:none}
+/* confirmación breve al terminar */
+.bt.is-ok{box-shadow:0 0 0 2px rgba(74,222,128,.7)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation-duration:.01ms!important}}

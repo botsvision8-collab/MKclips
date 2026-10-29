@@ -1,0 +1,306 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor · MKClips</title>
+<link rel="stylesheet" href="/editor/static/editor.css?v=19">
+</head>
+<body>
+<div id="app">
+  <header>
+    <a href="/app" title="Volver a MKClips" style="display:flex;align-items:center"><img src="/app/static/mkclips_logo_oscuro.svg" alt="MKClips" style="width:112px;height:36px;object-fit:contain"></a><a href="/app" style="text-decoration:none;border:1px solid var(--borde);border-radius:22px;padding:7px 14px;color:var(--txt)">Volver a MKClips</a><h1 id="titulo">Editor</h1>
+    <details id="menuHerramientas"><summary>Herramientas</summary><div><button id="bDiagnosticar">Diagnosticar este clip</button><button id="bComprobar">Comprobar archivos</button><button id="bReiniciar">Reiniciar panel</button></div></details>
+    <span class="esp"></span>
+    <span id="estadoGuardado"></span>
+    <label class="zs" title="Muestra las zonas donde TikTok/Reels/Shorts tapan el vídeo (solo guía, no se exporta)"><input type="checkbox" id="zsOn"> Zonas seguras</label>
+    <select id="zsPerfil" title="Red social"><option value="tiktok">TikTok</option><option value="reels">Reels</option><option value="shorts">Shorts</option></select>
+    <span class="zs">Opacidad <input type="range" id="zsOpa" min="10" max="90" value="45"></span>
+    <button id="bIrExportar" class="primario">Renderizar clip</button>
+  </header>
+  <main id="principal">
+    <div id="colIzq">
+
+    <aside id="panelPestanas">
+      <div class="pestanas">
+        <button data-p="video" class="activo">Vídeo</button>
+        <button data-p="pistas">Pieza</button>
+        <button data-p="subs">Subtítulos</button>
+        <button data-p="export">Exportar</button>
+      </div>
+      <div class="panel on" id="p-video">
+        <div class="alcance" id="gAlcance" hidden>
+          <b>¿Dónde se aplican los cambios?</b>
+          <div class="fila" style="margin:6px 0"><label><input type="radio" name="alc" value="todo"> Todo el clip</label><label><input type="radio" name="alc" value="tramo"> Solo este tramo</label></div>
+          <div class="nota" id="notaAlcance" style="margin:2px 0 6px"></div>
+          <div class="fila"><button id="bAplicarTodos" title="Usa la plantilla que ves en todos los tramos">Usar en todos los tramos</button><button id="bCopiarSel" hidden title="Mayús+clic para seleccionar varias piezas">Copiar a las seleccionadas</button><button id="bQuitarPropia" title="El tramo vuelve a usar la plantilla general">Quitar plantilla propia</button></div>
+        </div>
+        <div class="grupo">
+          <label class="t">Plantillas</label>
+          <div class="galeria" id="galeria"></div>
+          <div class="nota" id="notaPlantilla">Elige una plantilla y luego ajusta las zonas: <b style="color:var(--acento)">azul</b> en «Origen» = qué parte del vídeo se usa; <b style="color:var(--ok)">verde</b> en «Resultado» = dónde se coloca.</div>
+        </div>
+        <div class="grupo" id="gCapas">
+          <label class="t">Capas de la plantilla</label>
+          <div class="chips" id="chipsCapas"></div>
+          <div class="fila"><span>Ajuste</span><select id="cpAjuste"><option value="llenar">Llenar (recorta)</option><option value="contener">Contener (entero)</option></select></div>
+          <div class="fila"><span>Forma</span><select id="cpForma"><option value="rect">Rectángulo</option><option value="redondeado">Esquinas redondeadas</option><option value="circulo">Círculo / óvalo</option></select></div>
+          <div class="fila"><span>Redondeo</span><input type="range" id="cpRadio" min="0" max="50"><b id="cpRadioV" style="min-width:42px;text-align:right"></b></div>
+          <div class="fila"><span>Borde</span><input type="range" id="cpBorde" min="0" max="40"><input type="color" id="cpBordeColor" style="width:34px;padding:0"><b id="cpBordeV" style="min-width:34px;text-align:right"></b></div>
+          <div class="fila"><span>Desenfoque</span><input type="range" id="cpDesenfoque" min="0" max="60"><b id="cpDesV" style="min-width:42px;text-align:right"></b></div>
+          <div class="fila"><span>Oscurecer</span><input type="range" id="cpOscurecer" min="0" max="80"><b id="cpOscV" style="min-width:42px;text-align:right"></b></div>
+          <div class="fila"><button id="bCapaCompleta" title="La capa ocupa toda la pantalla">Pantalla completa</button><button id="bCapaCentro" title="Centra la capa en horizontal">Centrar</button></div>
+          <div class="fila"><button id="bCapaMas">+ Capa</button><button id="bCapaMenos">Quitar</button><button id="bCapaSub" title="Pasa la capa por encima de la siguiente">▲</button><button id="bCapaBaj" title="Pasa la capa por debajo">▼</button></div>
+          <section class="seguimiento-card">
+            <label class="seguimiento-switch"><input type="checkbox" id="seguirCara"><span>Seguir mi cara</span></label>
+            <div class="fila"><span>Suavidad</span><input type="range" id="suavidadCara" min="1" max="95" value="70"><b id="suavidadCaraVal">70%</b></div>
+            <div class="fila"><span>Zoom</span><input type="range" id="zoomCara" min="100" max="250" value="120"><b id="zoomCaraVal">120%</b></div>
+            <div class="fila"><span>Si no se ve la cara</span><select id="perdidaCara"><option value="mantener">Mantener última posición</option><option value="centro">Volver al centro</option></select></div>
+            <div class="fila"><button id="analizarCara" class="primario">Analizar</button><button id="cancelarCara" hidden>Cancelar</button></div>
+            <div class="barra" id="barraSeguimiento" hidden><i id="progresoSeguimiento"></i></div>
+            <div class="nota" id="notaSeguimiento">El seguimiento se aplica a la capa de cámara de esta plantilla.</div>
+            <canvas id="vistaSeguimiento" width="320" height="180" aria-label="Vista previa de detección y trayectoria"></canvas>
+          </section>
+          <div class="fila"><button id="bRestPlantilla">Restablecer plantilla</button></div>
+          <div class="nota" id="notaCara2" hidden></div>
+        </div>
+        <div class="grupo">
+          <label class="t">Encuadre (cómo se coloca el vídeo en 9:16)</label>
+          <div class="opciones" id="modos">
+            <label data-m="recorte"><input type="radio" name="modo" value="recorte"><div><b>Recortar</b><small>Llena la pantalla. Arrastra el recuadro azul en «Origen».</small></div></label>
+            <label data-m="ajustar"><input type="radio" name="modo" value="ajustar"><div><b>Ajustar</b><small>El vídeo entero, con fondo desenfocado.</small></div></label>
+            <label data-m="dividido"><input type="radio" name="modo" value="dividido"><div><b>Pantalla dividida (2)</b><small>Juego (azul) y cara (naranja). Puedes invertir el orden.</small></div></label>
+            <label data-m="tres"><input type="radio" name="modo" value="tres"><div><b>Tres pantallas</b><small>Tres franjas con su propio recuadro: azul, naranja y verde.</small></div></label>
+          </div>
+        </div>
+        <div class="grupo" id="gRecorte">
+          <label class="t">Recorte</label>
+          <div class="fila"><span>Zoom</span><input type="range" id="zoomRecorte" min="100" max="400" step="1"><b id="zoomVal" style="min-width:42px;text-align:right">100%</b></div>
+          <div class="fila"><button id="bCentrar">Centrar</button><button id="bRestRecorte">Restablecer</button></div>
+        </div>
+        <div class="grupo" id="gDividido">
+          <label class="t">Pantalla dividida</label>
+          <div class="fila"><span>Franja de arriba</span><input type="range" id="propArriba" min="20" max="80" step="1"><b id="propVal" style="min-width:42px;text-align:right">60%</b></div>
+          <div class="fila"><button id="bInvertir" title="Pone la cara arriba y el juego abajo (o al revés)">⇅ Invertir: cara arriba / juego abajo</button></div>
+          <div class="fila"><span>Línea divisoria</span><input type="range" id="linAncho" min="0" max="20"><input type="color" id="linColor" style="width:34px;padding:0"><b id="linVal" style="min-width:34px;text-align:right"></b></div>
+          <div class="fila"><button id="bCara" class="primario">Detectar cara y pantalla</button></div>
+          <div class="fila"><button id="bRestDiv">Restablecer recuadros</button></div>
+          <div class="nota" id="notaCara">Busca tu cámara en unos fotogramas del clip y coloca los dos recuadros. No reconoce qué juego es: usa el resto de la pantalla. Puedes ajustar los recuadros a mano.</div>
+          <div class="aviso" id="avisoCara" hidden></div>
+        </div>
+        <div class="grupo" id="gTres">
+          <label class="t">Tres pantallas</label>
+          <div class="fila"><span>Franja 1</span><input type="range" id="alt3a" min="10" max="70"><b id="alt3aVal" style="min-width:42px;text-align:right"></b></div>
+          <div class="fila"><span>Franja 2</span><input type="range" id="alt3b" min="10" max="70"><b id="alt3bVal" style="min-width:42px;text-align:right"></b></div>
+          <div class="nota" id="alt3c"></div>
+          <div class="fila"><button id="bRotar3" title="Cambia qué recuadro va en cada franja">↻ Rotar orden</button><button id="bInv3" title="Invierte el orden de las franjas">⇅ Invertir orden</button></div>
+          <div class="fila"><button id="bRest3">Restablecer recuadros</button></div>
+          <div class="nota">Arrastra cada recuadro en «Origen» para elegir qué zona del vídeo va en cada franja. Los colores coinciden con los del recuadro.</div>
+        </div>
+        <div class="nota">Atajos: <kbd>Espacio</kbd> reproducir · <kbd>S</kbd> dividir · <kbd>B</kbd> cuchilla · <kbd>V</kbd> selección · <kbd>T</kbd> recortar (ripple) · <kbd>Supr</kbd> borrar (cierra el hueco; <kbd>Mayús+Supr</kbd> lo deja) · <kbd>N</kbd> imán · <kbd>Ctrl+L</kbd> enlazar/separar · <kbd>Ctrl+C/V</kbd> copiar/pegar · <kbd>Alt</kbd>+clic = pieza suelta · <kbd>Ctrl+Z</kbd> deshacer</div>
+      </div>
+      <div class="panel" id="p-pistas">
+        <div class="grupo">
+          <label class="t">Añadir</label>
+          <div class="fila"><button id="bMedio2" class="primario">+ Vídeo, imagen o audio</button><button id="bTexto2">+ Texto</button><button id="bEtiqueta2">+ Etiqueta</button></div>
+          <div class="fila"><button id="bPistaV">+ Pista de vídeo</button><button id="bPistaA">+ Pista de audio</button></div>
+          <div class="nota">Un vídeo entra con su audio (enlazados). Arrastra las piezas por la línea de tiempo, también entre pistas; con <kbd>Alt</kbd> mueves solo la pieza que pulsas. Las pistas de arriba tapan a las de abajo; el texto siempre queda por encima.</div>
+          <div class="error" id="errMedio" hidden></div>
+        </div>
+        <div class="nota" id="notaSinPieza">Selecciona una pieza en la línea de tiempo para ajustarla.</div>
+        <div class="grupo" id="gPieza" hidden>
+          <label class="t" id="tPieza">Pieza</label>
+          <div class="fila"><span>Inicio (s)</span><input type="number" id="iT" step="0.1" min="0"></div>
+          <div class="fila"><span>Duración (s)</span><input type="number" id="iDur" step="0.1" min="0.1"></div>
+          <div class="fila" id="fVel"><span>Velocidad (%)</span><input type="number" id="iVel" step="5" min="10" max="1000"></div>
+          <details id="grupoAnimacion" open><summary class="t">Animación</summary><div id="paramFilas"></div><details class="grupo" open><summary>Presets</summary><div class="chips"><button data-preset="zoom-in">Zoom lento (acercar)</button><button data-preset="zoom-out">Zoom lento (alejar)</button><button data-preset="golpe">Zoom con golpe</button><button data-preset="pan-lr">Paneo izquierda → derecha</button><button data-preset="pan-rl">Paneo derecha → izquierda</button><button data-preset="vaiven">Vaivén</button></div></details><button id="bQuitarAnimacion">Quitar animación</button></details>
+          <div class="fila"><span>Aparece (s)</span><input type="number" id="iFi" step="0.1" min="0"><span style="min-width:60px">Se va (s)</span><input type="number" id="iFo" step="0.1" min="0"></div>
+          <div id="gTransformacion" hidden>
+            <div class="fila"><span>Recortar izquierda</span><input type="range" id="iCropL" min="0" max="45" value="0"></div>
+            <div class="fila"><span>Recortar derecha</span><input type="range" id="iCropR" min="0" max="45" value="0"></div>
+            <div class="fila"><span>Recortar arriba</span><input type="range" id="iCropT" min="0" max="45" value="0"></div>
+            <div class="fila"><span>Recortar abajo</span><input type="range" id="iCropB" min="0" max="45" value="0"></div>
+            <div class="fila"><label><input type="checkbox" id="iFlipH"> Voltear horizontal</label><label><input type="checkbox" id="iFlipV"> Voltear vertical</label></div>
+          </div>
+          <div id="gTrans">
+            <div class="fila"><span>Transición</span><select id="iTrans"><option value="ninguna">Ninguna</option><option value="disolver">Disolver</option><option value="deslizar_izq">Deslizar desde la derecha</option><option value="deslizar_der">Deslizar desde la izquierda</option><option value="deslizar_arriba">Deslizar desde abajo</option><option value="deslizar_abajo">Deslizar desde arriba</option></select><input type="number" id="iTransDur" step="0.1" min="0.1" max="5" title="Duración (s)"></div>
+          </div>
+          <div id="gModo">
+            <div class="fila"><span>Imagen</span><select id="eModo"><option value="cubrir">Cubre toda la pantalla</option><option value="recuadro">En un recuadro (esquina)</option></select></div>
+            <div id="gRecuadro"><div class="fila"><span>Tamaño</span><input type="range" id="eRw" min="10" max="100"></div><div class="nota">Arrastra el recuadro rosa en «Resultado» para colocarlo.</div></div>
+          </div>
+          <div id="gPlantilla" class="fila"><button id="bPlantillaTramo">Darle una plantilla propia a este tramo</button></div>
+          <div class="fila"><button id="bEnlazar">Enlazar seleccionadas</button><button id="bFrente" title="Pasa la pieza a una pista por encima de todo lo que haya en ese momento">Traer al frente</button><button id="bAudioDe" hidden>+ Añadir el audio de este vídeo</button></div>
+          <div class="fila"><button id="bDividir2">Dividir en el cabezal</button><button id="bBorrar2">Borrar</button></div>
+          <div class="nota">◆ guarda un fotograma clave en el cabezal: mueve el cabezal, cambia el valor y se anima solo. ◀ ▶ saltan entre ellos.</div>
+        </div>
+        <div class="grupo" id="gTexto" hidden>
+          <label class="t">Texto</label>
+          <div class="fila"><button id="bTexto3">+ Otro texto</button><button id="bEtiqueta3" title="Caja con tu nombre y el logo de la plataforma">+ Etiqueta</button><button id="bLogo3" title="Pone o cambia el logo de la etiqueta seleccionada">Logo…</button></div>
+          <textarea id="xTexto" rows="3" maxlength="400" style="width:100%;background:#14161a;border:1px solid var(--borde);border-radius:5px;color:inherit;padding:6px;font:inherit"></textarea>
+          <div class="fila"><span>Fuente</span><select id="xFuente" style="flex:1"></select></div>
+          <div class="fila"><span>Tamaño</span><input type="range" id="xTam" min="16" max="300"><b id="xTamV" style="min-width:34px;text-align:right"></b></div>
+          <div class="fila"><label><input type="checkbox" id="xNeg"> Negrita</label><label><input type="checkbox" id="xCur"> Cursiva</label><label><input type="checkbox" id="xMay"> MAYÚSC.</label></div>
+          <div class="fila"><span>Color</span><input type="color" id="xColor"><span style="min-width:50px">Alinear</span><select id="xAlin"><option value="izquierda">Izq.</option><option value="centro">Centro</option><option value="derecha">Der.</option></select></div>
+          <div class="fila"><span>Contorno</span><input type="color" id="xContorno"><input type="range" id="xGrosor" min="0" max="30"></div>
+          <div class="fila"><span>Sombra</span><input type="color" id="xColSombra"><input type="range" id="xSombra" min="0" max="30"></div>
+          <div class="fila"><span>Fondo</span><select id="xFondo"><option value="ninguno">Contorno</option><option value="caja">Caja</option></select><input type="color" id="xColFondo"></div>
+          <div class="fila"><span>Espaciado</span><input type="range" id="xEsp" min="-10" max="60"></div>
+          <div class="fila"><span>Posición X</span><input type="range" id="xX" min="0" max="100"></div>
+          <div class="fila"><span>Posición Y</span><input type="range" id="xY" min="0" max="100"></div>
+          <div class="fila"><span>Entra con</span><select id="xAnimIn" style="flex:1"></select></div>
+          <div class="fila"><span>Sale con</span><select id="xAnimOut" style="flex:1"></select></div>
+          <div class="fila"><span>Animación (s)</span><input type="number" id="xAnimDur" step="0.1" min="0.1" max="5"></div>
+          <div class="nota">También puedes arrastrar el texto en «Resultado».</div>
+        </div>
+      </div>
+      <div class="panel" id="p-subs">
+        <div class="grupo">
+          <label class="fila" style="margin:0 0 6px"><input type="checkbox" id="subActivos"> <b>Mostrar subtítulos en el clip</b></label>
+          <div class="fila"><button id="bWhisper" class="primario">Generar subtítulos del clip</button></div>
+          <div class="fila"><button id="bStream" hidden>Usar la transcripción del stream</button></div>
+          <div class="nota" id="notaSub">Transcribe el audio del clip en tu equipo con tiempo por palabra. Tarda unos segundos.</div>
+          <div class="error" id="errSub" hidden></div>
+        </div>
+        <div class="grupo">
+          <label class="t">Tipografía</label>
+          <div class="fila"><input type="text" id="fBuscar" placeholder="Buscar fuente…" style="width:100%"></div>
+          <div class="fila"><select id="fFuente" size="6" style="width:100%"></select></div>
+          <div class="fila"><span>Tamaño</span><input type="range" id="fTam" min="30" max="200"><b id="fTamVal" style="min-width:34px;text-align:right"></b></div>
+          <div class="fila"><label><input type="checkbox" id="fNegrita"> Negrita</label><label><input type="checkbox" id="fCursiva"> Cursiva</label><label><input type="checkbox" id="fMayus"> MAYÚSC.</label></div>
+        </div>
+        <div class="grupo">
+          <label class="t">Color y forma</label>
+          <div class="fila"><span>Texto</span><input type="color" id="cTexto"></div>
+          <div class="fila"><label><input type="checkbox" id="fResaltar"> Resaltar la palabra que se dice</label></div>
+          <div class="fila"><span>Resaltado</span><input type="color" id="cResalt"></div>
+          <div class="fila"><span>Fondo</span><select id="fFondo"><option value="ninguno">Contorno</option><option value="caja">Caja</option></select><input type="color" id="cFondo" title="Color de la caja"></div>
+          <div class="fila" id="filaContorno"><span>Contorno</span><input type="color" id="cContorno"><input type="range" id="fGrosor" min="0" max="16"></div>
+        </div>
+        <div class="grupo">
+          <label class="t">Colores por hablante</label>
+          <div class="fila" id="filaHablantes"></div>
+          <div class="nota">Asigna un hablante a cada línea con el selector «H» de la lista, o pinta solo algunas palabras más abajo.</div>
+        </div>
+        <div class="grupo">
+          <label class="t">Posición</label>
+          <div class="fila"><span>Altura</span><input type="range" id="fPosY" min="8" max="92"></div>
+          <div class="fila"><span>Palabras a la vez</span><input type="number" id="fPalabras" min="1" max="12"></div>
+        </div>
+        <div class="grupo">
+          <label class="t">Líneas (tiempos en segundos del clip original)</label>
+          <div class="fila"><button id="bNuevaLinea">+ Línea en el cabezal</button></div>
+          <div id="listaSub"></div>
+        </div>
+        <div class="grupo" id="grupoPalabras" hidden>
+          <label class="t">Palabras de la línea seleccionada</label>
+          <div class="nota" style="margin-top:0">Marca palabras (Mayús para un rango) y dales color.</div>
+          <div id="chips"></div>
+          <div class="fila"><button id="pTodas">Todas</button><button id="pNinguna">Ninguna</button><button id="pQuitar">Quitar color</button></div>
+          <div class="fila"><span>Color</span><input type="color" id="cPalabra" value="#ff5c8a"><button id="pAplicar">Aplicar</button></div>
+          <div class="fila"><span>Hablante</span><span id="swatches" style="display:flex;gap:4px;min-width:0"></span></div>
+        </div>
+      </div>
+      <div class="panel" id="p-export">
+        <div class="grupo" id="gIA">
+          <label class="t">Mejorar resolución con IA (experimental)</label>
+          <div class="fila"><label><input type="checkbox" id="iaActiva"> Mejorar al renderizar</label></div>
+          <div class="fila"><label><input type="checkbox" id="iaCam"> Cámara</label><label><input type="checkbox" id="iaJuego"> Juego</label>
+            <select id="iaModelo"><option value="rapido">Rápido</option><option value="calidad">Calidad (muy lento)</option></select></div>
+          <div class="nota" id="notaIA">Rellena los píxeles que faltan al ampliar. Solo procesa las zonas que se agrandan en la salida, y guarda el resultado para no repetirlo. Es lento: calcula varios minutos por clip.</div>
+          <div class="aviso" id="avisoIA" hidden></div>
+        </div>
+        <div class="grupo" id="gDestino">
+          <label class="t">Guardar como</label>
+          <div class="fila"><span>Nombre</span><input type="text" id="expNombre" maxlength="120" style="flex:1" autocomplete="off"></div>
+          <div class="fila"><label><input type="checkbox" id="expNoSob"> Conservar la versión anterior (añade un número)</label></div>
+          <div class="fila"><span>Carpeta</span><input type="text" id="expCarpeta" readonly style="flex:1"><button id="bCambiarCarpeta" title="Elige la carpeta general de clips editados">Cambiar…</button></div>
+          <div class="nota" id="expRuta"></div>
+          <div class="error" id="errDestino" hidden></div>
+        </div>
+        <div class="grupo">
+          <label class="t">Resultado</label>
+          <div class="nota" id="resumenExport"></div>
+          <div class="fila"><button id="bRender" class="primario">Renderizar clip</button><button id="bCancelar" hidden>Cancelar</button></div>
+          <div class="barra" id="barraRender" hidden><i></i></div>
+          <div class="nota" id="msgRender"></div>
+          <div class="error" id="errRender" hidden></div>
+          <div class="fila" id="filaAbrir" hidden><button id="bAbrir">Abrir clip editado</button><button id="bCarpeta">Abrir carpeta</button></div>
+        </div>
+        <div class="nota">El clip original no se modifica nunca: el editado se guarda en una carpeta «editados» junto a él, con todas sus pistas de audio.</div>
+      </div>
+    </aside>
+    <div class="split" id="splitH"></div>
+  <footer class="timeline">
+    <div class="barra-tl">
+      <div class="tl-grupo"><label>Edición</label>
+      <button id="bDeshacer" title="Deshacer (Ctrl+Z)">↶</button>
+      <button id="bRehacer" title="Rehacer (Ctrl+Y)">↷</button>
+      <span class="sep"></span>
+      <button id="tSel" class="activo" title="Selección (V): clic para elegir, arrastra para mover, arrastra un borde para recortar">↖</button>
+      <button id="tCuchilla" title="Cuchilla (B): clic en una pieza para cortarla (Mayús: corta todas las pistas)">✂</button>
+      <button id="tTrim" title="Recortar (T): arrastra un borde y cierra el hueco (ripple); en un corte entre dos piezas, lo mueve sin cambiar la duración total">⇹</button>
+      <button id="bDividir" title="Dividir en el cabezal (S)">Dividir</button>
+      <button id="bBorrar" title="Borrar lo seleccionado (Supr; Mayús+Supr cambia entre cerrar el hueco o dejarlo)">🗑</button>
+      </div>
+      <div class="tl-grupo"><label>Pegado</label>
+      <span class="sep"></span>
+      <button id="oRipple" title="Ripple: al borrar o recortar, lo que sigue se desplaza para no dejar huecos">Ripple</button>
+      <button id="oIman" title="Imán (N): los bordes se pegan al cabezal y a otras piezas">Imán</button>
+      <button id="oEnlazada" title="Piezas enlazadas: video y audio se seleccionan, mueven y cortan juntos (Alt+clic = una sola)">Enlazadas</button>
+      </div>
+      <div class="tl-grupo"><label>Añadir</label>
+      <button id="bMedio" class="primario" title="Añadir video (con su audio), imagen o audio en el cabezal">+ Medio</button>
+      <button id="bTexto" title="Añadir un texto en el cabezal">+ Texto</button><button id="bEtiqueta" title="Etiqueta de plataforma: caja con tu nombre y logo">+ Etiqueta</button><button id="bImagen" title="Añadir una imagen en el cabezal">+ Imagen</button>
+      </div>
+      <div class="tl-grupo"><label>Animar</label><button id="bAnimar" title="Abre las opciones de animación (zoom, movimiento, fotogramas clave) de la pieza seleccionada">◆ Animación</button></div>
+      <div class="tl-grupo"><label>Vista</label><button id="bIntercambiar" title="Intercambiar los visores y el panel">⇄ Visores</button><label class="zoom-tl" title="Ampliar o reducir la línea de tiempo">⌕ Zoom <input type="range" id="zoomTl" min="4" max="400" value="60"></label></div>
+      <details><summary>Más</summary><div><button id="bHueco" title="Cierra el hueco antes de la pieza (doble clic en un hueco)">⇤ Cerrar hueco</button><button id="bEnlace" title="Enlazar o separar seleccionadas (Ctrl+L)">⛓ Enlazar</button><select id="oColocar" title="Cómo se colocan las piezas nuevas"><option value="superponer">Superponer (pista nueva)</option><option value="sobrescribir">Sobrescribir en V1</option><option value="insertar">Insertar en V1</option><option value="al_final">Al final</option></select></div></details>
+      <span class="esp" style="flex:1;min-width:12px"></span>
+      <span id="infoTl" style="color:var(--sub)"></span>
+    </div>
+    <div class="tl">
+      <div class="etiquetas"><div id="etiqInt"></div></div>
+      <div id="scroll"><canvas id="tl"></canvas><div id="tlSpacer"></div></div>
+    </div>
+  </footer>
+
+    </div>
+    <div class="split" id="splitV"></div>
+    <div id="colVisores">
+    <section class="visor">
+      <div class="titulo"><span>Origen — vídeo original</span><span id="infoOrigen"></span></div>
+      <div class="zona" id="zonaOrigen">
+        <div id="cajaOrigen"><video id="v" playsinline preload="auto"></video><canvas id="cOriMedio" hidden style="position:absolute;left:0;top:0;width:100%;height:100%"></canvas><div id="overlay"></div></div>
+        <div id="cargando"><div class="giro"></div><div id="msgCarga">Preparando la vista previa…</div></div>
+      </div>
+      <div class="transporte">
+        <button id="bInicio" title="Inicio (Inicio)">⏮</button>
+        <button id="bPlay" title="Reproducir / pausa (Espacio)">▶</button>
+        <button id="bFin" title="Final (Fin)">⏭</button>
+        <span class="t" id="reloj">0:00.00 / 0:00.00</span>
+      </div>
+    </section>
+    <section class="visor">
+      <div class="titulo"><span>Resultado — así quedará</span><span id="infoSalida"></span></div>
+      <div class="zona" id="zonaSalida"><div id="cajaSalida"><canvas id="lienzo"></canvas><svg id="zonas" viewBox="0 0 1080 1920" preserveAspectRatio="none" hidden></svg><div id="ovCapa"></div><div id="overlaySalida"></div></div></div>
+      <div class="transporte"><span class="nota" style="margin:0">Lo que ves es lo que se exporta (vista previa en baja resolución).</span></div>
+    </section>
+    </div>
+  </main>
+</div></div>
+<dialog id="panelDiagnostico"><h3>Diagnóstico de este clip</h3><div id="progresoDiagnostico" class="nota">Preparando…</div><div class="barra"><i id="barraDiagnostico"></i></div><pre id="textoDiagnostico"></pre><div class="fila"><a id="descargarDiagnostico" hidden>Descargar .txt</a><span class="esp"></span><button id="cerrarDiagnostico">Cerrar</button></div></dialog>
+<dialog id="dialogEtiqueta"><h3>Crear etiqueta</h3><div class="fila"><span>Plataforma</span><select id="etPlataforma"><option>Facebook</option><option>Instagram</option><option>Twitch</option><option>YouTube</option><option>Kick</option><option>TikTok</option><option>Trovo</option></select></div><div class="fila"><span>Variante</span><select id="etVariante"><option value="claro">Clara</option><option value="oscuro">Oscura</option></select></div><div class="fila"><span>Forma</span><select id="etForma"><option value="ovalada">Ovalada</option><option value="rectangular">Rectangular</option></select></div><div class="fila"><span>Nombre</span><input id="etNombre" value="tu_nombre" maxlength="60" style="flex:1"></div><div class="fila"><span>Tipografía</span><select id="etFuente" style="flex:1"></select></div><div class="fila"><span>Tamaño</span><input id="etTamano" type="number" min="16" max="160" value="46"></div><div class="fila"><span id="etError" class="error"></span></div><div class="fila"><button id="etCrear" class="primario">Insertar etiqueta</button><button id="etCerrar">Cerrar</button></div></dialog>
+
+<script>if(document.cookie.includes("mkclips_theme=claro")){const logo=document.querySelector("header img[alt=MKClips]");if(logo)logo.src="/app/static/mkclips_logo_claro.svg"}</script>
+<script>const SELLOS_ESPERADOS = {rutas:"2026-10-27-b",piezas:"2026-10-23-c",render:"2026-10-27-b",render_piezas:"2026-10-23-c"};</script>
+<script defer src="/editor/static/editor_piezas.js?v=11"></script>
+<script defer src="/editor/static/editor_app.js?v=16"></script>
+</body>
+</html>
+
+
+
+
+
+

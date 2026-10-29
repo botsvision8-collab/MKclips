@@ -1,0 +1,7 @@
+/* MKClips — estilos extraídos de las maquetas de ui_referencia/. Úsalos TAL CUAL; no los reinterpretes. */
+/* Fuentes locales (OFL) y base. Cada pantalla tiene su propio CSS autocontenido bajo una clase de <body>. */
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:100 900;font-display:swap;src:url('../fonts/montserrat-latin-wght-normal.woff2') format('woff2')}
+@font-face{font-family:'Montserrat';font-style:italic;font-weight:100 900;font-display:swap;src:url('../fonts/montserrat-latin-wght-italic.woff2') format('woff2')}
+html,body{font-family:Montserrat,'Segoe UI',sans-serif}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:100 800;font-display:swap;src:url('../fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2')}
+html,body{height:100%;margin:0}

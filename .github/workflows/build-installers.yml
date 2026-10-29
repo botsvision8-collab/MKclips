@@ -1,0 +1,86 @@
+name: Build desktop installers
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build Windows application
+        shell: pwsh
+        run: ./scripts/build/empaquetar.ps1
+      - name: Build Windows installer
+        shell: pwsh
+        run: |
+          choco install innosetup --yes --no-progress
+          $iscc = Join-Path $env:ProgramFiles(x86) 'Inno Setup 6\ISCC.exe'
+          & $iscc "/DAppVersion=$((Get-Content VERSION -Raw).Trim())" 'scripts/build/MKClips.iss'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MKClips-Windows-x64
+          path: dist/MKClips-Setup-win64.exe
+
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install GTK and WebKit build dependencies
+        run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libgirepository1.0-dev libcairo2-dev pkg-config patchelf
+      - name: Build Linux application
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r scripts/requirements.txt pyinstaller
+          python -m PyInstaller --noconfirm --clean --distpath dist --workpath build/pyinstaller scripts/build/MKClips.spec
+      - name: Package AppImage
+        run: |
+          mkdir -p AppDir/usr/lib AppDir/usr/share/applications AppDir/usr/share/icons/hicolor/256x256/apps
+          cp -a dist/MKClips AppDir/usr/lib/mkclips
+          printf '%s\n' '#!/bin/sh' 'HERE="$(dirname "$(readlink -f "$0")")"' 'exec "$HERE/usr/lib/mkclips/MKClips" "$@"' > AppDir/AppRun
+          chmod +x AppDir/AppRun
+          printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=MKClips' 'Exec=AppRun' 'Icon=mkclips' 'Categories=AudioVideo;Video;' 'Terminal=false' > AppDir/usr/share/applications/mkclips.desktop
+          cp AppDir/usr/share/applications/mkclips.desktop AppDir/mkclips.desktop
+          python -c "from PIL import Image; Image.open('assets/logo.ico').convert('RGBA').save('AppDir/mkclips.png')"
+          cp AppDir/mkclips.png AppDir/usr/share/icons/hicolor/256x256/apps/mkclips.png
+          wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
+          chmod +x appimagetool
+          APPIMAGE_EXTRACT_AND_RUN=1 ./appimagetool AppDir "dist/MKClips-$(cat VERSION)-x86_64.AppImage"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MKClips-Linux-x64
+          path: dist/*.AppImage
+
+  macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build macOS application
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r scripts/requirements.txt pyinstaller pyobjc-framework-Cocoa
+          python -m PyInstaller --noconfirm --clean --distpath dist --workpath build/pyinstaller scripts/build/MKClips.spec
+      - name: Create drag-and-drop DMG installer
+        run: |
+          mkdir -p dmg-root
+          cp -R dist/MKClips.app dmg-root/
+          ln -s /Applications dmg-root/Applications
+          hdiutil create -volname MKClips -srcfolder dmg-root -ov -format UDZO "dist/MKClips-$(cat VERSION)-macOS.dmg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MKClips-macOS-arm64
+          path: dist/*.dmg

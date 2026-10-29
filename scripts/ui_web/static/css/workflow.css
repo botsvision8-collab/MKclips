@@ -1,0 +1,55 @@
+/* MKClips — estilos extraídos de las maquetas de ui_referencia/. Úsalos TAL CUAL; no los reinterpretes. */
+/* Usar con <body class="p-workflow"> */
+.p-workflow body{margin:0;}
+.p-workflow *{box-sizing:border-box;}
+.p-workflow .app{position:relative;width:100vw;height:100vh;min-height:900px;display:flex;background:#0b0e0f;color:#f1f5f2;font-family:'Montserrat',sans-serif;overflow:hidden;}
+.p-workflow .bl{position:absolute;border-radius:50%;filter:blur(110px);pointer-events:none;}
+.p-workflow .b1{width:560px;height:560px;left:-160px;bottom:-200px;background:rgba(74,222,128,.22);}
+.p-workflow .b2{width:600px;height:600px;right:-120px;top:-180px;background:rgba(56,189,248,.2);}
+.p-workflow .side, .p-workflow .main{position:relative;z-index:1;}
+.p-workflow .glass{background:rgba(255,255,255,.05);backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);border:1px solid rgba(255,255,255,.11);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 14px 34px rgba(0,0,0,.35);}
+.p-workflow .side{width:240px;padding:26px 18px;display:flex;flex-direction:column;gap:8px;border-width:0 1px 0 0;background:rgba(8,10,11,.7);}
+.p-workflow .logo{margin:0 0 30px 0;}
+.p-workflow .nav{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:26px;color:#b9c4bb;text-decoration:none;font-weight:600;font-size:14px;border:1px solid transparent;}
+.p-workflow .nav.on{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.45);color:#86efac;}
+.p-workflow .nav svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.p-workflow .sp{flex:1;}
+.p-workflow .mode{height:44px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#f1f5f2;padding:0 14px;font:600 12px 'Montserrat',sans-serif;}
+.p-workflow .main{flex:1;padding:30px 36px;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:20px 22px;min-width:0;}
+.p-workflow .hd{grid-column:span 2;}
+.p-workflow h1{margin:0;font-size:34px;font-weight:800;font-style:italic;}
+.p-workflow h1 b{color:#4ade80;}
+.p-workflow .col{display:flex;flex-direction:column;gap:20px;min-height:0;}
+.p-workflow .card{border-radius:24px;padding:22px;}
+.p-workflow .ch{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.p-workflow .num{width:28px;height:28px;border-radius:50%;background:#4ade80;color:#0b0e0f;font-weight:800;display:grid;place-items:center;font-size:13px;font-style:italic;}
+.p-workflow .ct{font-weight:800;font-style:italic;font-size:19px;}
+.p-workflow .row{display:flex;gap:12px;align-items:center;}
+.p-workflow .lab{width:64px;font-size:13px;color:#a8b5aa;font-weight:600;}
+.p-workflow .in{flex:1;height:46px;border-radius:23px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.35);color:#f1f5f2;padding:0 20px;font:500 13px 'Montserrat',sans-serif;min-width:0;}
+.p-workflow .in::placeholder{color:#7c897e;}
+.p-workflow .ta{flex:1;height:84px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.35);color:#f1f5f2;padding:14px 18px;font:500 13px 'Montserrat',sans-serif;resize:none;}
+.p-workflow .bt{height:44px;border:0;border-radius:22px;padding:0 24px;font:700 13px 'Montserrat',sans-serif;cursor:pointer;color:#0b0e0f;background:linear-gradient(120deg,#4ade80,#38bdf8);}
+.p-workflow .bt.ol{background:rgba(74,222,128,.08);border:1.5px solid rgba(74,222,128,.5);color:#86efac;}
+.p-workflow .bt.gh{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#eef3ee;}
+.p-workflow .bt.sm{height:38px;padding:0 18px;}
+.p-workflow .pad{padding-left:64px;margin-top:14px;}
+.p-workflow .tbl{border-radius:16px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);margin:14px 0;overflow:hidden;}
+.p-workflow .tr{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;padding:12px 16px;font-size:13px;font-weight:600;align-items:center;border-top:1px solid rgba(255,255,255,.06);}
+.p-workflow .tr.h{border-top:0;color:#a8b5aa;background:rgba(255,255,255,.04);}
+.p-workflow .tr span{color:#a8b5aa;font-weight:500;}
+.p-workflow .bar{height:5px;border-radius:3px;background:rgba(255,255,255,.1);margin-top:6px;overflow:hidden;}
+.p-workflow .bar b{display:block;height:100%;background:linear-gradient(90deg,#4ade80,#38bdf8);}
+.p-workflow .log{flex:1;border-radius:16px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);padding:16px;font:400 12px 'JetBrains Mono',monospace;color:#d3dbd4;display:flex;flex-direction:column;gap:10px;margin-top:14px;}
+.p-workflow .log i{font-style:normal;color:#4ade80;font-weight:500;margin-right:10px;}
+.p-workflow .log .p{color:#8c998e;word-break:break-all;margin-bottom:6px;}
+.p-workflow .donut{width:210px;height:210px;border-radius:50%;margin:26px auto 22px;background:conic-gradient(#4ade80 0 28%,#38bdf8 28% 49%,#f1f5f2 49% 84%,#6b7a70 84% 100%);display:grid;place-items:center;box-shadow:0 0 40px rgba(74,222,128,.15);}
+.p-workflow .donut div{width:140px;height:140px;border-radius:50%;background:#0f1517;display:grid;place-items:center;text-align:center;font-weight:800;font-size:38px;line-height:1;font-style:italic;}
+.p-workflow .donut small{display:block;font-size:12px;font-weight:600;color:#a8b5aa;margin-top:4px;font-style:normal;}
+.p-workflow .lg{display:flex;flex-direction:column;gap:8px;}
+.p-workflow .li{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:14px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);font-size:13px;font-weight:600;}
+.p-workflow .li i{width:10px;height:10px;border-radius:50%;}
+.p-workflow .li em{margin-left:auto;font-style:normal;color:#86efac;font-weight:700;}
+.p-workflow .ok{margin-top:auto;text-align:center;font-size:12px;font-weight:700;color:#86efac;padding-top:14px;}
+.p-workflow .main{overflow:auto;min-height:0}
+

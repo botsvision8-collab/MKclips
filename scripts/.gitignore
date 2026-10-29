@@ -1,0 +1,38 @@
+# Datos privados
+scripts/config.py
+
+# Cache (se regenera solo)
+scripts/.mkclips_cache/
+scripts/__pycache__/
+scripts/**/__pycache__/
+*.pyc
+
+# Estado y logs de ejecucion (especificos de cada maquina/corrida)
+scripts/estado_progreso.json
+scripts/historial_tiempos_proceso.json
+scripts/progreso_actual.txt
+scripts/ultimo_video.txt
+scripts/transcripcion.json
+scripts/transcripcion.json.meta.json
+scripts/eventos_audio.json
+scripts/eventos_audio.json.meta.json
+scripts/historial_clips.json
+scripts/*.log
+scripts/notificacion.lock
+
+# Resultados de cada corrida (se regeneran al procesar de nuevo)
+scripts/resultados/
+
+# Salidas de pruebas controladas (se regeneran corriendo el test)
+scripts/pruebas_controladas/salida_segmentos_compuestos/
+scripts/pruebas_controladas/__pycache__/
+
+# Secretos y datos locales de la IA / catalogo de clips
+scripts/.llm_api_key
+.llm_api_key
+catalogo_clips.json
+notificacion_error.log
+
+# Criterios del creador (texto personal, editable)
+scripts/criterios_creador.txt
+criterios_creador.txt
