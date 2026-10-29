@@ -65,10 +65,11 @@ tmp_*/
 scripts/mkclips_privacy_*/
 
 # Construccion y distribución local
-build/
-dist/
+/build/
+/dist/
 *.exe
 scripts/build/.venv/
+scripts/build/test-temp/
 
 # Configuracion privada de herramientas y archivos temporales de trabajo
 .claude.json
