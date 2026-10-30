@@ -30,3 +30,7 @@ La clave del proveedor se define en el entorno antes de iniciar la app, por ejem
 En Windows ejecuta `./scripts/build/empaquetar.ps1`. Para compilar instaladores de los tres sistemas, ejecuta **Build desktop installers** desde GitHub Actions o publica una etiqueta `v*`. Las compilaciones de Linux/macOS se ejecutan en runners nativos.
 
 No incluyas `scripts/config.py`, claves, grabaciones, clips, resultados ni transcripciones al compartir el código. Consulta [SEGURIDAD.md](SEGURIDAD.md).
+
+## Licencia
+
+El codigo fuente de MKClips se publica bajo la licencia [MIT](LICENSE), que permite usarlo, modificarlo y redistribuirlo, conservando los avisos de copyright y licencia. Las fuentes tipograficas incluidas tienen sus propias licencias SIL Open Font License en `scripts/ui_web/fuentes/`. Las marcas y logotipos de plataformas en `assets/` pertenecen a sus respectivos titulares; la licencia MIT no concede derechos de marca.
