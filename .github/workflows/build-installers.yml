@@ -19,6 +19,15 @@ jobs:
       - name: Build Windows application
         shell: pwsh
         run: ./scripts/build/empaquetar.ps1
+      - name: Download WebView2 bootstrapper
+        shell: pwsh
+        run: |
+          $file = 'scripts/build/MicrosoftEdgeWebView2Setup.exe'
+          Invoke-WebRequest -Uri 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile $file
+          $signature = Get-AuthenticodeSignature -FilePath $file
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notlike '*Microsoft Corporation*') {
+            throw 'The downloaded WebView2 bootstrapper does not have a valid Microsoft signature.'
+          }
       - name: Build Windows installer
         shell: pwsh
         run: |
@@ -84,3 +93,44 @@ jobs:
         with:
           name: MKClips-macOS-arm64
           path: dist/*.dmg
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, linux, macos]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: MKClips-*
+          path: release-assets
+          merge-multiple: true
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          shopt -s nullglob
+          assets=(release-assets/*)
+          if [[ ${#assets[@]} -ne 3 ]]; then
+            echo "Expected the Windows installer, Linux AppImage, and macOS DMG; got ${#assets[@]} files." >&2
+            exit 1
+          fi
+          tag="$GITHUB_REF_NAME"
+          title="MKClips ${tag}"
+          cat > release-notes.md <<'EOF'
+          ## Instaladores
+
+          - **Windows x64:** descarga `MKClips-Setup-win64.exe`. El setup instala WebView2 Runtime y descarga FFmpeg automáticamente; requiere conexión a Internet durante la instalación.
+          - **Linux x86_64:** descarga el AppImage. El sistema debe tener GTK 3 y WebKit2GTK 4.1.
+          - **macOS Apple Silicon:** descarga el DMG y arrastra MKClips a Aplicaciones.
+
+          Los modelos de Whisper se descargan automáticamente al usarlos por primera vez. Consulta el README para más detalles.
+          EOF
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" "${assets[@]}" --repo "$GITHUB_REPOSITORY" --clobber
+            gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false --title "$title" --notes-file release-notes.md
+          else
+            gh release create "$tag" "${assets[@]}" --repo "$GITHUB_REPOSITORY" --title "$title" --notes-file release-notes.md --verify-tag
+          fi
