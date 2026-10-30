@@ -39,6 +39,32 @@ Name: "{autodesktop}\MKClips"; Filename: "{app}\MKClips.exe"; Tasks: desktopicon
 Filename: "{app}\MKClips.exe"; Description: "Iniciar MKClips"; Flags: postinstall nowait skipifsilent
 
 [Code]
+const
+  WebView2RuntimeGuid = '{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}';
+
+function HasWebView2Runtime(): Boolean;
+var
+  Version: String;
+begin
+  Result := False;
+  if RegQueryStringValue(HKLM64,
+    'SOFTWARE\Microsoft\EdgeUpdate\Clients\' + WebView2RuntimeGuid,
+    'pv', Version) and (Version <> '') and (Version <> '0.0.0.0') then begin
+    Result := True;
+    exit;
+  end;
+  if RegQueryStringValue(HKLM32,
+    'SOFTWARE\Microsoft\EdgeUpdate\Clients\' + WebView2RuntimeGuid,
+    'pv', Version) and (Version <> '') and (Version <> '0.0.0.0') then begin
+    Result := True;
+    exit;
+  end;
+  if RegQueryStringValue(HKCU,
+    'SOFTWARE\Microsoft\EdgeUpdate\Clients\' + WebView2RuntimeGuid,
+    'pv', Version) and (Version <> '') and (Version <> '0.0.0.0') then
+    Result := True;
+end;
+
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
   ResultCode: Integer;
@@ -57,13 +83,15 @@ begin
     exit;
   end;
 
-  if not Exec(ExpandConstant('{tmp}\MicrosoftEdgeWebView2Setup.exe'), '/silent /install', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then begin
-    Result := 'No se pudo iniciar el instalador de WebView2. Comprueba que Windows permite instalar el runtime.';
-    exit;
-  end;
-  if (ResultCode <> 0) and (ResultCode <> 3010) and (ResultCode <> 1641) then begin
-    Result := 'No se pudo instalar WebView2 Runtime. Comprueba tu conexion a Internet y vuelve a intentarlo.';
-    exit;
+  if not HasWebView2Runtime() then begin
+    if not Exec(ExpandConstant('{tmp}\MicrosoftEdgeWebView2Setup.exe'), '/silent /install', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then begin
+      Result := 'No se pudo iniciar el instalador de WebView2. Instala Microsoft Edge WebView2 Runtime manualmente desde https://developer.microsoft.com/microsoft-edge/webview2/ y vuelve a ejecutar este instalador.';
+      exit;
+    end;
+    if (ResultCode <> 0) and (ResultCode <> 3010) and (ResultCode <> 1641) then begin
+      Result := Format('No se pudo instalar WebView2 Runtime (código %d). Instala Microsoft Edge WebView2 Runtime manualmente desde https://developer.microsoft.com/microsoft-edge/webview2/ y vuelve a ejecutar este instalador.', [ResultCode]);
+      exit;
+    end;
   end;
 
   WizardForm.StatusLabel.Caption := 'Descargando FFmpeg 9.0.2 (aprox. 109 MB)...';
